@@ -23,6 +23,14 @@ define('GRATIS_AUTOMATION_URL', plugin_dir_url(__FILE__));
 require_once __DIR__ . '/autoload.php';
 
 add_action('plugins_loaded', function () {
+    // One-time migration: disable autoload on growing option.
+    if (!get_option('gratis_automation_autoload_fixed')) {
+        global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->update($wpdb->options, ['autoload' => 'no'], ['option_name' => 'gratis_automations']);
+        update_option('gratis_automation_autoload_fixed', 1);
+    }
+
     \Gratis\Automation\Engine::init();
     if (defined('WP_CLI') && WP_CLI) {
         \WP_CLI::add_command('gratis-auto', \Gratis\Automation\CLI\AutoCommand::class);

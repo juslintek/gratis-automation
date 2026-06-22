@@ -22,14 +22,14 @@ final class Engine {
         $automation['created'] = gmdate('c');
         $automation['active'] = true;
         $all[] = $automation;
-        update_option(self::OPTION, $all);
+        update_option(self::OPTION, $all, false);
         return $automation['id'];
     }
 
     public static function remove(int $id): bool {
         $all = self::all();
         $all = array_filter($all, fn($a) => ($a['id'] ?? 0) !== $id);
-        update_option(self::OPTION, array_values($all));
+        update_option(self::OPTION, array_values($all), false);
         return true;
     }
 
@@ -41,7 +41,7 @@ final class Engine {
             }
         }
         unset($a);
-        update_option(self::OPTION, array_values($all));
+        update_option(self::OPTION, array_values($all), false);
         return true;
     }
 
