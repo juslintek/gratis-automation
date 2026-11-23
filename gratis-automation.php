@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Gratis Automation
  * Plugin URI: https://github.com/juslintek/gratis-automation
- * Description: WordPress-native workflow automation. Trigger → Action chains. Replaces Zapier/Make ($20-50/mo).
+ * Description: WordPress-native workflow automation. Trigger → Action chains.
  * Version: 1.0.0
  * Requires at least: 6.0
  * Requires PHP: 8.1
