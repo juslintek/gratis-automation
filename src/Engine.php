@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Gratis\Automation;
 
+defined('ABSPATH') || exit;
 final class Engine {
 
     private const OPTION = 'gratis_automations';
