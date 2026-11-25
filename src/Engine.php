@@ -19,10 +19,14 @@ final class Engine {
 
     public static function add(array $automation): int {
         $all = self::all();
-        $automation['id'] = count($all) + 1;
+        $max = 0;
+        foreach ($all as $existing) {
+            $max = max($max, (int) ($existing['id'] ?? 0));
+        }
+        $automation['id']      = $max + 1;
         $automation['created'] = gmdate('c');
-        $automation['active'] = true;
-        $all[] = $automation;
+        $automation['active']  = true;
+        $all[]                 = $automation;
         update_option(self::OPTION, $all, false);
         return $automation['id'];
     }
@@ -31,6 +35,7 @@ final class Engine {
         $all = self::all();
         $all = array_filter($all, fn($a) => ($a['id'] ?? 0) !== $id);
         update_option(self::OPTION, array_values($all), false);
+        wp_clear_scheduled_hook('gratis_auto_cron_' . $id);
         return true;
     }
 
@@ -94,11 +99,13 @@ final class Engine {
     }
 
     private static function actionWebhook(array $action, array $context): array {
-        $url = $action['url'] ?? '';
-        if (!$url) return ['success' => false, 'error' => 'No URL'];
-        $response = wp_remote_post($url, [
+        $url = esc_url_raw((string) ($action['url'] ?? ''));
+        if ('' === $url) {
+            return ['success' => false, 'error' => 'No URL'];
+        }
+        $response = wp_safe_remote_post($url, [
             'headers' => ['Content-Type' => 'application/json'],
-            'body' => wp_json_encode($context),
+            'body'    => wp_json_encode($context),
             'timeout' => 10,
         ]);
         return ['success' => !is_wp_error($response), 'code' => wp_remote_retrieve_response_code($response)];
