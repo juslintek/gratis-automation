@@ -41,11 +41,15 @@ Yes. Everything is free — no "Pro" version, no locked features, and no nag scr
 
 = Does this plugin make external HTTP requests? =
 
-No. Unless you explicitly configure an external service (such as a CDN or SMTP host), the plugin does not phone home or send analytics.
+Only when you explicitly create an automation with a Webhook action pointing to a URL you configure.
 
 = Where do I get support? =
 
 Open an issue on the plugin's GitHub repository.
+
+== Third-Party Services ==
+
+This plugin does not connect to any hardcoded external services. If you create an automation using the **Webhook** action, the plugin sends an HTTP POST JSON payload containing the trigger context to the destination URL you configure.
 
 == Changelog ==
 
